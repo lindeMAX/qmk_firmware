@@ -1,3 +1,6 @@
 
-#define BASE 0
-#define MOD 1
+enum layers {
+    _QWERTY,
+    _QWERTZ
+};
+

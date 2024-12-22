@@ -2,15 +2,6 @@
 
 #include "split29.h"
 
-/*void matrix_init_kb(void) {}*/
-/*void matrix_scan_kb(void) {}*/
-/*bool process_record_kb(uint16_t keycode, keyrecord_t *record) {*/
-/*    return false;*/
-/*}*/
-/*bool led_update_kb(led_t led_state) {*/
-/*    return false;*/
-/*}*/
-
 #ifdef OLED_ENABLE
 static void render_logo(void) {
     /*static const char PROGMEM pacman_ghost[] = {*/
@@ -73,26 +64,67 @@ bool oled_task_user(void) {
 
 #endif
 
-#ifdef LEDS
-led_config_t g_led_config = { {
-  // Key Matrix to LED Index
-  {   5, NO_LED, NO_LED,   0 },
-  { NO_LED, NO_LED, NO_LED, NO_LED },
-  {   4, NO_LED, NO_LED,   1 },
-  {   3, NO_LED, NO_LED,   2 }
-}, {
-  // LED Index to Physical Position
-  { 188,  16 }, { 187,  48 }, { 149,  64 }, { 112,  64 }, {  37,  48 }, {  38,  16 }
-}, {
-  // LED Index to Flag
-  1, 4, 4, 4, 4, 1
-} };
+#ifdef RGB_MATRIX_ENABLE
+
+led_config_t g_led_config = {
+    {// Tell the system wich LED represents wich LED
+        {0,   1,  2,  3,  4,       5}, {     6,  7,  8,  9, 10, 11},
+        {12, 13, 14, 15, 16,      17}, {    18, 19, 20, 21, 22, 23},
+        {24, 25, 26, 27, 28,      29}, {    30, 31, 32, 33, 34, 35},
+        {36, 37, 38, 39, 40,      41}, {    42, 43, 44, 45, 46, 47},
+        {48, 49, 50, 51, 52,  NO_LED}, {NO_LED, 53, 54, 55, 56, 57}
+    }, {// LED Index to Physical Position. // Top left key is at {0,0}
+        {0, 0},  {20, 0},  {40, 0},  {60, 0},  {80, 0},  {100, 0},  {120, 0},  {140, 0},  {160, 0},  {180, 0},  {200, 0},  {220, 0},
+        {0, 20}, {20, 20}, {40, 20}, {60, 20}, {80, 20}, {100, 20}, {120, 20}, {140, 20}, {160, 20}, {180, 20}, {200, 20}, {220, 20},
+        {0, 40}, {20, 40}, {40, 40}, {60, 40}, {80, 40}, {100, 40}, {120, 40}, {140, 40}, {160, 40}, {180, 40}, {200, 40}, {220, 40},
+        {0, 60}, {20, 60}, {40, 60}, {60, 60}, {80, 60}, {100, 60}, {120, 60}, {140, 60}, {160, 60}, {180, 60}, {200, 60}, {220, 60},
+        {0, 80}, {20, 80}, {40, 80}, {60, 80}, {80, 80},                       {140, 80}, {160, 80}, {180, 80}, {200, 80}, {220, 80}
+    }, {// LED Index to Flag
+        4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+        4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+        4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+        4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+        4, 4, 4, 4, 4,       4, 4, 4, 4, 4
+        }
+    };
 
 const is31fl3743a_led_t PROGMEM g_is31fl3743a_leds[IS31FL3743A_LED_COUNT] = {
-/* Driver
- *   |  R         G         B */
-    {0, SW1_CS1,  SW1_CS2,  SW1_CS3},
-    // etc...
+    /* Driver
+     *   |  R         G         B */
+    // First Row
+    {0, SW5_CS1, SW5_CS2, SW5_CS3},
+    {0, SW3_CS1, SW3_CS2, SW3_CS3},
+    {0, SW6_CS1, SW6_CS2, SW6_CS3},
+    {0, SW4_CS1, SW4_CS2, SW4_CS3},
+    {0, SW2_CS1, SW2_CS2, SW2_CS3},
+    {0, SW1_CS1, SW1_CS2, SW1_CS3},
+    // Second Row
+    {0, SW5_CS4, SW5_CS5, SW5_CS6},
+    {0, SW3_CS4, SW3_CS5, SW3_CS6},
+    {0, SW6_CS4, SW6_CS5, SW6_CS6},
+    {0, SW4_CS4, SW4_CS5, SW4_CS6},
+    {0, SW2_CS4, SW2_CS5, SW2_CS6},
+    {0, SW1_CS4, SW1_CS5, SW1_CS6},
+
+    {0, SW5_CS7, SW5_CS8, SW5_CS9},
+    {0, SW3_CS7, SW3_CS8, SW3_CS9},
+    {0, SW6_CS7, SW6_CS8, SW6_CS9},
+    {0, SW4_CS7, SW4_CS8, SW4_CS9},
+    {0, SW2_CS7, SW2_CS8, SW2_CS9},
+    {0, SW1_CS7, SW1_CS8, SW1_CS9},
+
+    {0, SW5_CS13, SW5_CS14, SW5_CS15},
+    {0, SW3_CS13, SW3_CS14, SW3_CS15},
+    {0, SW6_CS13, SW6_CS14, SW6_CS15},
+    {0, SW4_CS13, SW4_CS14, SW4_CS15},
+    {0, SW2_CS13, SW2_CS14, SW2_CS15},
+    {0, SW1_CS13, SW1_CS14, SW1_CS15},
+
+    {0, SW5_CS10, SW5_CS11, SW5_CS12},
+    {0, SW3_CS10, SW3_CS11, SW3_CS12},
+    {0, SW6_CS10, SW6_CS11, SW6_CS12},
+    {0, SW4_CS10, SW4_CS11, SW4_CS12},
+    {0, SW2_CS10, SW2_CS11, SW2_CS12}
 };
 
 #endif

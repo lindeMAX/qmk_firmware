@@ -27,21 +27,11 @@
 /* Split */
 /*********/
 
-// The device which has USB connected and active USB commmunication will be the master.
-// Uncomment to check for for supply voltage on physical USB connection (VBUS)
-#define SPLIT_USB_DETECT
-#define SPLIT_USB_TIMEOUT 2000
-#define SPLIT_USB_TIMEOUT_POLL 10
 // Reboot slave if no communication from master within timeout.
 #define SPLIT_WATCHDOG_TIMEOUT 3000
 #define SPLIT_WATCHDOG_ENABLE
-// Left hand if if B7 is HIGH
-#define SPLIT_HAND_PIN A0
 // Sync OLED state with the slave side
-#define SPLIT_OLED_ENABLE
 // Sync activity timestamps with the slave
-#define SPLIT_ACTIVITY_ENABLE
-#define SPLIT_LAYER_STATE_ENABLE
 // Enable sync of RGB backlight
 /*#define RGBLIGHT_SPLIT*/
 // First number is the amount of LEDs connected to the left side

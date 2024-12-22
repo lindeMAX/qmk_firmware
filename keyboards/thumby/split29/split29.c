@@ -2,67 +2,11 @@
 
 #include "split29.h"
 
-#ifdef OLED_ENABLE
-static void render_logo(void) {
-    /*static const char PROGMEM pacman_ghost[] = {*/
-    /*    0xFF, 0xFF, 0xFF, 0xFF, 0x7F, 0x3F, 0x1F, 0x0F, 0x07, 0x07, 0x03, 0x03, 0x01, 0x01, 0x01, 0x01,*/
-    /*    0x01, 0x01, 0x01, 0x01, 0x03, 0x03, 0x07, 0x07, 0x0F, 0x1F, 0x3F, 0x7F, 0xFF, 0xFF, 0xFF, 0xFF,*/
-    /*    0xFF, 0xFF, 0x1F, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x78, 0xFC, 0xFC, 0x8C, 0x84, 0x88,*/
-    /*    0x00, 0x00, 0x00, 0x00, 0x00, 0x78, 0xFC, 0xFC, 0x8C, 0x84, 0x88, 0x00, 0x01, 0x1F, 0xFF, 0xFF,*/
-    /*    0xFF, 0xFF, 0x24, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x00, 0x00,*/
-    /*    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF,*/
-    /*    0xFF, 0xFF, 0xE0, 0x80, 0x80, 0xC0, 0xE0, 0xF0, 0xF0, 0xE0, 0xC0, 0x80, 0x80, 0xC0, 0xE0, 0xF0,*/
-    /*    0xF0, 0xE0, 0xC0, 0x80, 0x80, 0x80, 0xC0, 0xF0, 0xF0, 0xE0, 0xC0, 0x80, 0x80, 0xE0, 0xFF, 0xFF*/
-    /*};*/
-    /*oled_write_raw_P(pacman_ghost, sizeof(pacman_ghost));*/
-
-    static const char PROGMEM pacman_ghost_inv[] = {0x00, 0x00, 0x00, 0x00, 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xF8, 0xFC, 0xFC, 0xFE, 0xFE, 0xFE, 0xFE, 0xFE, 0xFE, 0xFE, 0xFE, 0xFC, 0xFC, 0xF8, 0xF8, 0xF0, 0xE0, 0xC0, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xE0, 0xFE, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x87, 0x03, 0x03, 0x73, 0x7B, 0x77, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x87, 0x03, 0x03, 0x73, 0x7B, 0x77, 0xFF, 0xFE, 0xE0, 0x00, 0x00, 0x00, 0x00, 0xDB, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFE, 0xFE, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFE, 0xFE, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x1F, 0x7F, 0x7F, 0x3F, 0x1F, 0x0F, 0x0F, 0x1F, 0x3F, 0x7F, 0x7F, 0x3F, 0x1F, 0x0F, 0x0F, 0x1F, 0x3F, 0x7F, 0x7F, 0x7F, 0x3F, 0x0F, 0x0F, 0x1F, 0x3F, 0x7F, 0x7F, 0x1F, 0x00, 0x00};
-    oled_write_raw_P(pacman_ghost_inv, sizeof(pacman_ghost_inv));
+void keyboard_post_init_kb() {
+   gpio_set_pin_output(GPIO_ENC_C);
+    gpio_write_pin_low(GPIO_ENC_C);
 }
 
-bool render_status(void) {
-    render_logo();
-    // Host Keyboard Layer Status
-    oled_set_cursor(32, 0);
-    switch (get_highest_layer(layer_state)) {
-        case _QWERTY:
-            oled_write_P(PSTR("QWERTY\n"), false);
-            break;
-        case _QWERTZ:
-            oled_write_P(PSTR("QWERTZ\n"), false);
-            break;
-        default:
-            // Or use the write_ln shortcut over adding '\n' to the end of your string
-            oled_write_ln_P(PSTR("Undefined"), false);
-    }
-
-    // Host Keyboard LED Status
-    led_t led_state = host_keyboard_led_state();
-    oled_write_P(led_state.num_lock ? PSTR("NUM ") : PSTR("    "), false);
-    oled_write_P(led_state.caps_lock ? PSTR("CAP ") : PSTR("    "), false);
-    oled_write_P(led_state.scroll_lock ? PSTR("SCR ") : PSTR("    "), false);
-
-    return false;
-}
-
-// This is called from oled_init() in drivers/oled/oled_driver.c
-oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-    return OLED_ROTATION_270;
-}
-
-// Wweak override in drivers/oled/oled_driver.c
-bool oled_task_user(void) {
-    render_logo();
-    render_status();
-
-    // Default keyboard drawing code
-    return false;
-}
-#endif
-
-#ifdef ENCODER_ENABLE
-
-#endif
 
 #ifdef RGB_MATRIX_ENABLE
 
@@ -127,4 +71,231 @@ const is31fl3743a_led_t PROGMEM g_is31fl3743a_leds[IS31FL3743A_LED_COUNT] = {
     {0, SW2_CS10, SW2_CS11, SW2_CS12}
 };
 
+#endif
+
+#ifdef ENCODER_ENABLE
+
+bool oled_render_status(void);
+
+// The right hand encoder will be used for RGB settings
+typedef struct {
+    uint8_t func;
+    uint8_t func_max;
+} encoder_t;
+
+enum ENCODER_FUNCTIONS_1 {
+    ENC_FUNC_RGB_BRIGHTNESS,
+    ENC_FUNC_RGB_EFFECT,
+    ENC_FUNC_RGB_SPEED,
+    ENC_FUNC_RGB_HUE
+};
+
+enum ENCODER_FUNCTIONS_0 {
+    ENC_FUNC_LAYER_CHANGE,
+    ENC_FUNC_VOLUME
+};
+
+void encoder_inc_func(encoder_t *enc) {
+    if (enc->func == enc->func_max) {
+        enc->func = 0;
+    } else {
+        enc->func++;
+    }
+}
+
+encoder_t enc0 = {0, 1};
+encoder_t enc1 = {0, 3};
+
+void layer_change(bool clockwise) {
+    uint8_t current_layer = get_highest_layer(layer_state);
+    uint8_t next_layer;
+
+    if (clockwise) {
+        if (current_layer < (LAYER_COUNT -1)) {
+            next_layer = current_layer++;
+        } else {
+            next_layer = 0;
+        }
+    } else {
+        if (current_layer > 0) {
+            next_layer = current_layer--;
+        } else {
+            next_layer = LAYER_COUNT - 1;
+        }
+
+    }
+    layer_move(next_layer);
+}
+
+bool encoder_update_kb(uint8_t index, bool clockwise){
+     if (!encoder_update_user(index, clockwise)) {
+      return false; /* Don't process further events if user function exists and returns false */
+    }
+    if (index == 0) { /* First encoder */
+        switch (enc0.func) {
+        case ENC_FUNC_LAYER_CHANGE:
+            layer_change(clockwise);
+            break;
+        case ENC_FUNC_VOLUME:
+            if (clockwise) {
+                tap_code(KC_KB_VOLUME_UP);
+            } else {
+                tap_code(KC_KB_VOLUME_DOWN);
+            }
+            break;
+        }
+    } else if (index == 1) { /* Second encoder */
+        switch (enc1.func) {
+        case ENC_FUNC_RGB_BRIGHTNESS:
+            if (clockwise) {
+                rgb_matrix_increase_val();
+            } else {
+                rgb_matrix_decrease_val();
+            }
+            break;
+        case ENC_FUNC_RGB_EFFECT:
+            if (clockwise) {
+                rgb_matrix_step();
+            } else {
+                rgb_matrix_step_reverse();
+            }
+            break;
+        case ENC_FUNC_RGB_SPEED:
+            if (clockwise) {
+                rgb_matrix_increase_speed() ;
+            } else {
+                rgb_matrix_decrease_speed();
+            }
+            break;
+        case ENC_FUNC_RGB_HUE:
+            if (clockwise) {
+                rgb_matrix_increase_hue();
+            } else {
+                rgb_matrix_decrease_hue();
+            }
+            break;
+        }
+    }
+    oled_render_status();
+    return true;
+}
+
+bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case KC_ENC0:
+      if (record->event.pressed) {
+        encoder_inc_func(&enc0);
+      } else {
+        // Do something else when release
+      }
+      break;
+    case KC_ENC1:
+      if (record->event.pressed) {
+        encoder_inc_func(&enc1);
+      } else {
+        // Do something else when release
+      }
+      break;
+    default:
+      return true; // Process all other keycodes normally
+        break;
+  }
+  return false;
+}
+
+#endif
+
+#ifdef OLED_ENABLE
+static void oled_render_logo(void) {
+    /*static const char PROGMEM pacman_ghost[] = {*/
+    /*    0xFF, 0xFF, 0xFF, 0xFF, 0x7F, 0x3F, 0x1F, 0x0F, 0x07, 0x07, 0x03, 0x03, 0x01, 0x01, 0x01, 0x01,*/
+    /*    0x01, 0x01, 0x01, 0x01, 0x03, 0x03, 0x07, 0x07, 0x0F, 0x1F, 0x3F, 0x7F, 0xFF, 0xFF, 0xFF, 0xFF,*/
+    /*    0xFF, 0xFF, 0x1F, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x78, 0xFC, 0xFC, 0x8C, 0x84, 0x88,*/
+    /*    0x00, 0x00, 0x00, 0x00, 0x00, 0x78, 0xFC, 0xFC, 0x8C, 0x84, 0x88, 0x00, 0x01, 0x1F, 0xFF, 0xFF,*/
+    /*    0xFF, 0xFF, 0x24, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x00, 0x00,*/
+    /*    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF,*/
+    /*    0xFF, 0xFF, 0xE0, 0x80, 0x80, 0xC0, 0xE0, 0xF0, 0xF0, 0xE0, 0xC0, 0x80, 0x80, 0xC0, 0xE0, 0xF0,*/
+    /*    0xF0, 0xE0, 0xC0, 0x80, 0x80, 0x80, 0xC0, 0xF0, 0xF0, 0xE0, 0xC0, 0x80, 0x80, 0xE0, 0xFF, 0xFF*/
+    /*};*/
+    /*oled_write_raw_P(pacman_ghost, sizeof(pacman_ghost));*/
+
+    static const char PROGMEM pacman_ghost_inv[] = {0x00, 0x00, 0x00, 0x00, 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xF8, 0xFC, 0xFC, 0xFE, 0xFE, 0xFE, 0xFE, 0xFE, 0xFE, 0xFE, 0xFE, 0xFC, 0xFC, 0xF8, 0xF8, 0xF0, 0xE0, 0xC0, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xE0, 0xFE, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x87, 0x03, 0x03, 0x73, 0x7B, 0x77, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x87, 0x03, 0x03, 0x73, 0x7B, 0x77, 0xFF, 0xFE, 0xE0, 0x00, 0x00, 0x00, 0x00, 0xDB, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFE, 0xFE, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFE, 0xFE, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x1F, 0x7F, 0x7F, 0x3F, 0x1F, 0x0F, 0x0F, 0x1F, 0x3F, 0x7F, 0x7F, 0x3F, 0x1F, 0x0F, 0x0F, 0x1F, 0x3F, 0x7F, 0x7F, 0x7F, 0x3F, 0x0F, 0x0F, 0x1F, 0x3F, 0x7F, 0x7F, 0x1F, 0x00, 0x00};
+    oled_write_raw_P(pacman_ghost_inv, sizeof(pacman_ghost_inv));
+}
+
+bool oled_render_status(void) {
+    if (is_keyboard_master()) {
+        // Host Keyboard Layer Status
+        oled_set_cursor(32, 0);
+        oled_write_P(PSTR("Layer:\n"), false);
+        switch (get_highest_layer(layer_state)) {
+            case _DEFAULT:
+                oled_write_P(PSTR("DFLT\n"), false);
+                break;
+            case _MEDIA:
+                oled_write_P(PSTR("MEDIA\n"), false);
+                break;
+            case _MAGIC:
+                oled_write_P(PSTR("MAGIC\n"), false);
+                break;
+            default:
+                // Or use the write_ln shortcut over adding '\n' to the end of your string
+                oled_write_ln_P(PSTR("Undefined"), false);
+        }
+
+        // Host Keyboard LED Status
+        led_t led_state = host_keyboard_led_state();
+        oled_write_P(led_state.num_lock ? PSTR("NUM\n") : PSTR("\n"), false);
+        oled_write_P(led_state.caps_lock ? PSTR("CAP\n") : PSTR("\n"), false);
+        oled_write_P(led_state.scroll_lock ? PSTR("SCR\n") : PSTR("\n"), false);
+
+        // Encoder Status
+        oled_write_P(PSTR("ENC 0:\n"), false);
+        switch (enc0.func) {
+        case ENC_FUNC_LAYER_CHANGE:
+            oled_write_P(PSTR("layer\n"), false);
+            break;
+        case ENC_FUNC_VOLUME:
+            oled_write_P(PSTR("VOL.\n"), false);
+            break;
+        }
+    } else {
+        oled_set_cursor(32, 0);
+        // Encoder Status
+        oled_write_P(PSTR("ENC 1:\n"), false);
+        switch (enc1.func) {
+        case ENC_FUNC_RGB_EFFECT:
+            oled_write_P(PSTR("RGB:\n"), false);
+            oled_write_P(PSTR("Effect\n"), false);
+            break;
+        case ENC_FUNC_RGB_BRIGHTNESS:
+            oled_write_P(PSTR("RGB:\n"), false);
+            oled_write_P(PSTR("Bright\n"), false);
+            break;
+        case ENC_FUNC_RGB_SPEED:
+            oled_write_P(PSTR("RGB:\n"), false);
+            oled_write_P(PSTR("Speed\n"), false);
+            break;
+        case ENC_FUNC_RGB_HUE:
+            oled_write_P(PSTR("RGB:\n"), false);
+            oled_write_P(PSTR("Hue.\n"), false);
+            break;
+        }
+    }
+    return false;
+}
+
+// This is called from oled_init() in drivers/oled/oled_driver.c
+oled_rotation_t oled_init_user(oled_rotation_t rotation) {
+    return OLED_ROTATION_270;
+}
+
+// Wweak override in drivers/oled/oled_driver.c
+bool oled_task_kb(void) {
+    oled_render_logo();
+    oled_render_status();
+
+    // Default keyboard drawing code
+    return false;
+}
 #endif

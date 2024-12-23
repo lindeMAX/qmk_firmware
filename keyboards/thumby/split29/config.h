@@ -30,14 +30,13 @@
 // Reboot slave if no communication from master within timeout.
 #define SPLIT_WATCHDOG_TIMEOUT 3000
 #define SPLIT_WATCHDOG_ENABLE
-// Sync OLED state with the slave side
-// Sync activity timestamps with the slave
-// Enable sync of RGB backlight
-/*#define RGBLIGHT_SPLIT*/
 // First number is the amount of LEDs connected to the left side
 // The next version will not have to use jumpers :)
 /*#define MATRIX_ROW_PINS_RIGHT { "B12", "B14", "A8", "A15", "A12", "A11" }*/
 /*#define MATRIX_COL_PINS_RIGHT { "B13", "B15", "A9", "A10", "B3" }*/
+
+// Enable sync of RGB backlight
+/*#define RGBLIGHT_SPLIT*/
 
 /***************/
 /* USART & I2C */

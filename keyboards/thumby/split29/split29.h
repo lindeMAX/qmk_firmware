@@ -13,5 +13,7 @@ enum my_keycodes {
   KC_ENC1
 };
 
-#define GPIO_ENC_C "C14"
+#define GPIO_ENC_C C14
+
+#define GPIO_LEFT_RIGHT A0
 

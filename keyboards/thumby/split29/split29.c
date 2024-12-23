@@ -3,8 +3,9 @@
 #include "split29.h"
 
 void keyboard_post_init_kb() {
-   gpio_set_pin_output(GPIO_ENC_C);
+    gpio_set_pin_output(GPIO_ENC_C);
     gpio_write_pin_low(GPIO_ENC_C);
+    gpio_set_pin_input(GPIO_LEFT_RIGHT);
 }
 
 
@@ -126,7 +127,6 @@ void layer_change(bool clockwise) {
     }
     layer_move(next_layer);
 }
-
 bool encoder_update_kb(uint8_t index, bool clockwise){
      if (!encoder_update_user(index, clockwise)) {
       return false; /* Don't process further events if user function exists and returns false */
@@ -176,31 +176,35 @@ bool encoder_update_kb(uint8_t index, bool clockwise){
             break;
         }
     }
-    oled_render_status();
     return true;
 }
 
 bool process_record_kb(uint16_t keycode, keyrecord_t *record) {
-  switch (keycode) {
-    case KC_ENC0:
-      if (record->event.pressed) {
-        encoder_inc_func(&enc0);
-      } else {
-        // Do something else when release
-      }
-      break;
-    case KC_ENC1:
-      if (record->event.pressed) {
-        encoder_inc_func(&enc1);
-      } else {
-        // Do something else when release
-      }
-      break;
-    default:
-      return true; // Process all other keycodes normally
-        break;
-  }
-  return false;
+#ifdef CONSOLE_ENABLE
+    uprintf("KL: kc: 0x%04X, col: %2u, row: %2u, pressed: %u, time: %5u, int: %u, count: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
+#endif
+    switch (keycode) {
+        case KC_ENC0:
+            if (record->event.pressed) {
+                encoder_inc_func(&enc0);
+                oled_render_status();
+            } else {
+            // Do something else when release
+            }
+            break;
+        case KC_ENC1:
+            if (record->event.pressed) {
+                encoder_inc_func(&enc1);
+                oled_render_status();
+            } else {
+                // Do something else when release
+            }
+            break;
+        default:
+            return true; // Process all other keycodes normally
+            break;
+    }
+    return false;
 }
 
 #endif
@@ -224,7 +228,8 @@ static void oled_render_logo(void) {
 }
 
 bool oled_render_status(void) {
-    if (is_keyboard_master()) {
+    // is_keyboard_master() does not work here for some reason
+    if (gpio_read_pin(A0)) {
         // Host Keyboard Layer Status
         oled_set_cursor(32, 0);
         oled_write_P(PSTR("Layer:\n"), false);
@@ -242,13 +247,11 @@ bool oled_render_status(void) {
                 // Or use the write_ln shortcut over adding '\n' to the end of your string
                 oled_write_ln_P(PSTR("Undefined"), false);
         }
-
         // Host Keyboard LED Status
         led_t led_state = host_keyboard_led_state();
         oled_write_P(led_state.num_lock ? PSTR("NUM\n") : PSTR("\n"), false);
         oled_write_P(led_state.caps_lock ? PSTR("CAP\n") : PSTR("\n"), false);
         oled_write_P(led_state.scroll_lock ? PSTR("SCR\n") : PSTR("\n"), false);
-
         // Encoder Status
         oled_write_P(PSTR("ENC 0:\n"), false);
         switch (enc0.func) {
@@ -260,8 +263,8 @@ bool oled_render_status(void) {
             break;
         }
     } else {
-        oled_set_cursor(32, 0);
         // Encoder Status
+        oled_set_cursor(32, 0);
         oled_write_P(PSTR("ENC 1:\n"), false);
         switch (enc1.func) {
         case ENC_FUNC_RGB_EFFECT:

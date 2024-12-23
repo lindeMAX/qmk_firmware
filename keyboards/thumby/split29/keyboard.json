@@ -54,10 +54,13 @@
             "sync": {
                 "activity": true,
                 "detected_os": true,
+                "haptic": true,
                 "layer_state": true,
+                "indicators": true,
                 "matrix_state": true,
                 "modifiers": true,
-                "oled": true
+                "oled": true,
+                "wpm": true
             }
         },
         "usb_detect": {

@@ -27,6 +27,9 @@
 /* Split */
 /*********/
 
+// for keyboard-level data sync:
+#define SPLIT_TRANSACTION_IDS_KB KEYBOARD_SYNC_A, KEYBOARD_SYNC_B
+
 // Reboot slave if no communication from master within timeout.
 #define SPLIT_WATCHDOG_TIMEOUT 3000
 #define SPLIT_WATCHDOG_ENABLE
@@ -62,16 +65,13 @@
 // The local buffer size to allocate.
 #define OLED_MATRIX_SIZE (OLED_DISPLAY_HEIGHT / 8 * OLED_DISPLAY_WIDTH)
 //
-#define OLED_BRIGHTNESS 127
+#define OLED_BRIGHTNESS 96
 // Set the time interval for updating the OLED display in ms. This will improve the matrix scan rate.
 #define OLED_UPDATE_INTERVAL 50
 // Number of dirty block to render per loop. Increasing may degrade performance
 #define OLED_UPDATE_PROCESS_LIMIT 1
-// Shift output to the right this many pixels.
-// Useful for 128x64 displays centered on a 132x64 SH1106 IC.
-#define OLED_COLUMN_OFFSET 0
 // Set the display clock divide ratio/oscillator frequency.
-#define OLED_DISPLAY_CLOCK 0x80
+#define OLED_DISPLAY_CLOCK 0x10
 // The font code file to use for custom fonts
 #define OLED_FONT_H "font5x7.c"
 // The starting character index for custom fonts
@@ -91,7 +91,7 @@
 // Scrolls the OLED screen after 0ms of OLED inactivity. Helps reduce OLED Burn-in. Set to 0 to disable.
 #define OLED_SCROLL_TIMEOUT TIMEOUT_DIM
 // Scroll timeout direction is right when defined, left when undefined.
-#define OLED_SCROLL_TIMEOUT_RIGHT
+#define OLED_SCROLL_TIMEOUT_LEFT
 // Turn off if after a certain time of inactivity
 #define OLED_TIMEOUT TIMEOUT_OFF
 

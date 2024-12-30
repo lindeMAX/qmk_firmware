@@ -31,7 +31,7 @@
         "rotary": [{
             "pin_a": "C15",
             "pin_b": "C13",
-            "resolution": 24
+            "resolution": 4
         }]
     },
     "split": {
@@ -41,7 +41,7 @@
                 "rotary": [{
                     "pin_a": "C15",
                     "pin_b": "C13",
-                    "resolution": 24
+                    "resolution": 4
                 }]
             }
         },
@@ -54,13 +54,13 @@
             "sync": {
                 "activity": true,
                 "detected_os": true,
-                "haptic": true,
+                "haptic": false,
                 "layer_state": true,
                 "indicators": true,
-                "matrix_state": true,
+                "matrix_state": false,
                 "modifiers": true,
                 "oled": true,
-                "wpm": true
+                "wpm": false
             }
         },
         "usb_detect": {
@@ -103,7 +103,7 @@
         "default": {
             "animation": "pixel_rain",
             "on": true,
-            "val": 255,
+            "val": 127,
             "speed": 48
         },
         "sleep": false,

@@ -354,7 +354,7 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation);
 void oled_clear(void);
 
 // Alias to oled_render_dirty to avoid a change in api.
-#define oled_render() oled_render_dirty(false)
+#define oled_render() oled_render_dirty(true)
 
 // Renders all dirty blocks to the display at one time or a subset depending on the value of
 // all.
